@@ -16,6 +16,7 @@ import org.eclipse.milo.opcua.sdk.server.nodes.UaMethodNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.structured.Argument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,7 @@ public class SqrtMethod extends AbstractMethodInvocationHandler {
         logger.debug("Invoking sqrt() method of objectId={}", invocationContext.getObjectId());
 
         double x = (double) inputValues[0].getValue();
+
         double xSqrt = Math.sqrt(x);
 
         return new Variant[]{new Variant(xSqrt)};

@@ -37,7 +37,9 @@ public class BrowseNodeExample implements ClientExample {
         client.connect().get();
 
         // start browsing at root folder
-        browseNode("", client, Identifiers.RootFolder);
+        browseNode("", client,
+//                Identifiers.RootFolder);
+                new NodeId(4,1108));
 
         future.complete(client);
     }

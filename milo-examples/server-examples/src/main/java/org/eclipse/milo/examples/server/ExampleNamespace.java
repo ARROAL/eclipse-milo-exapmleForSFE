@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.milo.examples.server.methods.GenerateEventMethod;
 import org.eclipse.milo.examples.server.methods.SqrtMethod;
+import org.eclipse.milo.examples.server.methods.StringArrayMethod;
 import org.eclipse.milo.examples.server.types.CustomDataType;
 import org.eclipse.milo.opcua.sdk.core.AccessLevel;
 import org.eclipse.milo.opcua.sdk.core.Reference;
@@ -157,6 +158,8 @@ public class ExampleNamespace extends ManagedNamespace {
         addVariableNodes(folderNode);
 
         addSqrtMethod(folderNode);
+
+        addStringArrayMethod(folderNode);
 
         addGenerateEventMethod(folderNode);
 
@@ -545,6 +548,30 @@ public class ExampleNamespace extends ManagedNamespace {
         methodNode.setProperty(UaMethodNode.InputArguments, sqrtMethod.getInputArguments());
         methodNode.setProperty(UaMethodNode.OutputArguments, sqrtMethod.getOutputArguments());
         methodNode.setInvocationHandler(sqrtMethod);
+
+        getNodeManager().addNode(methodNode);
+
+        methodNode.addReference(new Reference(
+            methodNode.getNodeId(),
+            Identifiers.HasComponent,
+            folderNode.getNodeId().expanded(),
+            false
+        ));
+    }
+
+    private void addStringArrayMethod(UaFolderNode folderNode) {
+        UaMethodNode methodNode = UaMethodNode.builder(getNodeContext())
+            .setNodeId(newNodeId("HelloWorld/stringArrayMethod"))
+            .setBrowseName(newQualifiedName("stringArrayMethod"))
+            .setDisplayName(new LocalizedText(null, "stringArrayMethod"))
+            .setDescription(
+                LocalizedText.english("Return the concatenation string from array string"))
+            .build();
+
+        StringArrayMethod stringArrayMethod = new StringArrayMethod(methodNode);
+        methodNode.setProperty(UaMethodNode.InputArguments, stringArrayMethod.getInputArguments());
+        methodNode.setProperty(UaMethodNode.OutputArguments, stringArrayMethod.getOutputArguments());
+        methodNode.setInvocationHandler(stringArrayMethod);
 
         getNodeManager().addNode(methodNode);
 

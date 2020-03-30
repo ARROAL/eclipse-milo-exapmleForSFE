@@ -45,7 +45,11 @@ public class BrowseExample implements ClientExample {
         client.connect().get();
 
         // start browsing at root folder
-        browseNode("", client, Identifiers.RootFolder);
+        browseNode("",
+                    client,
+//                    Identifiers.RootFolder);
+                    new NodeId(4,1108)
+        );
 
         future.complete(client);
     }
@@ -56,7 +60,16 @@ public class BrowseExample implements ClientExample {
             BrowseDirection.Forward,
             Identifiers.References,
             true,
-            uint(NodeClass.Object.getValue() | NodeClass.Variable.getValue()),
+            uint(NodeClass.Unspecified.getValue() |
+                    NodeClass.Object.getValue() |
+                    NodeClass.Variable.getValue() |
+                    NodeClass.Method.getValue() |
+                    NodeClass.ObjectType.getValue() |
+                    NodeClass.VariableType.getValue() |
+                    NodeClass.ReferenceType.getValue() |
+                    NodeClass.DataType.getValue() |
+                    NodeClass.View.getValue()
+                    ),
             uint(BrowseResultMask.All.getValue())
         );
 
@@ -66,7 +79,7 @@ public class BrowseExample implements ClientExample {
             List<ReferenceDescription> references = toList(browseResult.getReferences());
 
             for (ReferenceDescription rd : references) {
-                logger.info("{} Node={}", indent, rd.getBrowseName().getName());
+                logger.info("{} Node={} ID={}" , indent, rd.getBrowseName().getName(), rd.getNodeId());
 
                 // recursively browse to children
                 rd.getNodeId().local().ifPresent(nodeId -> browseNode(indent + "  ", client, nodeId));
